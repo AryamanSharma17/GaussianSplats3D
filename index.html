@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>3D Gaussian Splat</title>
+  <script type="text/javascript" src="./build/demo/js/util.js"></script>
+  <script type="importmap">
+    {
+        "imports": {
+            "three": "./build/demo/lib/three.module.js",
+            "@mkkellogg/gaussian-splats-3d": "./build/demo/lib/gaussian-splats-3d.module.js"
+
+        }
+    }
+  </script>
+  <style>
+
+    body {
+      background-color: #000000;
+      height: 100vh;
+      margin: 0px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <!-- <button onclick="window.location.href='./index-vr.html'" style="position: relative;">VR-webpage</button> -->
+  <script type="module">
+    import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
+    import * as THREE from 'three';
+    import Stats from 'https://unpkg.com/three@0.148.0/examples/jsm/libs/stats.module.js';
+    import { GUI } from 'https://unpkg.com/three@0.148.0/examples/jsm/libs/lil-gui.module.min.js';
+
+    const scene = new THREE.Scene();
+    
+    const renderer = new THREE.WebGLRenderer();
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = parseInt(urlParams.get('mode')) || 0;
+    var gui = new GUI();
+    const stats = new Stats();
+    document.body.appendChild(stats.dom); 
+    const lightfolder = gui.addFolder('Scene')
+    renderer.xr.enabled = true;
+    renderer.xr.setReferenceSpaceType( 'local' );
+    const viewer = new GaussianSplats3D.Viewer({
+      'cameraUp': [0, -1, 0 ],
+      'initialCameraPosition': [-3.15634, -0.16946, -0.51552],
+      'initialCameraLookAt': [1.52976, 2.27776, 1.65898],
+      'sphericalHarmonicsDegree': 2,
+      'sharedMemoryForWorkers': false,
+      // 'webXRMode': GaussianSplats3D.WebXRMode.VR,
+      // 'gpuAcceleratedSort': false,
+    });
+
+
+    viewer.addSplatScenes([{
+        'path': './bonsai_trimmed.ksplat',
+        'rotation': [0,0,0,0],
+        'scale': [1.5, 1.5, 1.5],
+        'position': [0,0,0]
+    }
+])
+.then(() => {
+    viewer.start();
+});
+    
+    let paths = {
+      "Bonsai": "./bonsai_trimmed.ksplat",
+      "Truck": "./truck.ksplat",
+    };
+    const dropdown = lightfolder.add({ path: Object.keys(paths)[0] }, 'path', paths).name('Select Path');
+    
+    dropdown.onChange(function(value) {
+      console.log(value);
+      const selectedPath = value;
+      console.log(selectedPath);
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          viewer.removeSplatScene(0);
+        });
+      });
+      const button = lightfolder.add({ 'Go to VR Page': () => { window.location.href = './index-vr.html'; } }, 'Go to VR Page');
+
+    
+    // const addButton = lightfolder.add({ addScene: false }, 'addScene').name('Add Splat Scene').listen();
+    // addButton.onChange(() => {
+    //   if (addButton.getValue()) {
+    //     viewer.addSplatScene('./truck.ksplat', {
+    //       'progressiveLoad': false
+    //     }).then(() => {
+    //       viewer.start();
+    //       animate();
+    //     });
+    //   }
+    // });
+
+    // const removeButton = lightfolder.add({ removeScene: false }, 'removeScene').name('Remove Splat Scene').listen();
+    // removeButton.onChange(() => {
+    //   if (removeButton.getValue()) {
+    //     viewer.removeSplatScene(0)
+    //       .then(() => {
+    //         viewer.start();
+    //         animate();
+    //       });
+    //   }
+    // });
+    if (renderer.xr.isPresenting) {
+        lightfolder.add(viewer, 'webXRMode', GaussianSplats3D.WebXRMode).name('WebXR Mode');
+        console.log('WebXR is active');  
+    };
+
+    function animate() {
+        requestAnimationFrame(animate);
+        stats.update();
+    }
+  </script>
+</body>
+
+</html>

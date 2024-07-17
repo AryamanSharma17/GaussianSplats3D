@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>3D Gaussian Splat</title>
+  <script type="text/javascript" src="./build/demo/js/util.js"></script>
+  <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.148.0/build/three.module.js",
+            "@mkkellogg/gaussian-splats-3d": "./build/demo/lib/gaussian-splats-3d.module.js"
+
+        }
+    }
+  </script>
+  <style>
+
+    body {
+      background-color: #000000;
+      height: 100vh;
+      margin: 0px;
+    }
+
+  </style>
+
+</head>
+
+<body> 
+  <script type="module">
+    import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
+    import * as THREE from 'three';
+    import Stats from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/libs/stats.module.js';
+    import { GUI } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/libs/lil-gui.module.min.js';
+    import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/webxr/VRButton.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/controls/OrbitControls.js';
+    import { XRControllerModelFactory } from 'https://cdn.jsdelivr.net/npm/three@0.148.0/examples/jsm/webxr/XRControllerModelFactory.js';
+
+    const scene = new THREE.Scene();
+    const renderer = new THREE.WebGLRenderer();
+    const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.1, 10 );
+    camera.position.set( 0, 1.6, 3 );
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = parseInt(urlParams.get('mode')) || 0;
+    var gui = new GUI();
+    const stats = new Stats();
+    document.body.appendChild(stats.dom); 
+    const lightfolder = gui.addFolder('Scene')
+    renderer.xr.enabled = true;
+    renderer.xr.setReferenceSpaceType( 'local' );
+    // document.body.appendChild( VRButton.createButton( renderer ) );
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setFromPoints( [ new THREE.Vector3( 0, 0, 0 ), new THREE.Vector3( 0, 0, - 5 ) ] );
+
+    const controller1 = renderer.xr.getController( 0 );
+    controller1.add( new THREE.Line( geometry ) );
+    scene.add( controller1 );
+
+    const controller2 = renderer.xr.getController( 1 );
+    controller2.add( new THREE.Line( geometry ) );
+    scene.add( controller2 );
+
+
+    const controllerModelFactory = new XRControllerModelFactory();
+
+    const controllerGrip1 = renderer.xr.getControllerGrip( 0 );
+    controllerGrip1.add( controllerModelFactory.createControllerModel( controllerGrip1 ) );
+    scene.add( controllerGrip1 );
+
+    const controllerGrip2 = renderer.xr.getControllerGrip( 1 );
+    controllerGrip2.add( controllerModelFactory.createControllerModel( controllerGrip2 ) );
+    scene.add( controllerGrip2 );
+
+    const viewer = new GaussianSplats3D.Viewer({
+      'selfDrivenMode': false,
+
+      'cameraUp': [0, -1, -0.54],
+      'initialCameraPosition': [-3.15634, -0.16946, -0.51552],
+      'initialCameraLookAt': [1.52976, 2.27776, 1.65898],
+      'sphericalHarmonicsDegree': 2,
+      'sharedMemoryForWorkers': false,
+      'webXRMode': GaussianSplats3D.WebXRMode.VR,
+      'gpuAcceleratedSort': false,
+    });
+
+
+    viewer.addSplatScenes([{
+        'path': './bonsai_trimmed.ksplat',
+        'rotation': [0,0,0,0],
+        'scale': [1.5, 1.5, 1.5],
+        'position': [0,0,0]
+    }
+])
+.then(() => {
+  requestAnimationFrame(update);
+});
+    
+    let paths = {
+      "Bonsai": "./bonsai_trimmed.ksplat",
+      "Truck": "./truck.ksplat",
+    };
+    const dropdown = lightfolder.add({ path: Object.keys(paths)[0] }, 'path', paths).name('Select Path');
+    
+    dropdown.onChange(function(value) {
+      const selectedPath = value;
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          console.log('removing other scene');
+          viewer.removeSplatScene(0);
+        });
+      });
+      const button = lightfolder.add({ 'test Page': () => { window.location.href = './index-vr-test.html'; } }, 'test Page'); 
+      const button_stat = lightfolder.add({ 'Static Page': () => { window.location.href = './index.html'; } }, 'Static Page');
+      // const button_test = lightfolder.add({ 'Go to VRtest Page': () => { window.location.href = './index-vr-test.html'; } }, 'Go to VR test Page');
+
+    console.log(renderer.xr.getSession());
+
+    function animate() {
+        requestAnimationFrame(animate);
+        stats.update();
+    }
+    renderer.setAnimationLoop( function () {
+
+    renderer.render( scene, camera );
+
+    } );
+    function update() {
+    requestAnimationFrame(update);
+    viewer.update();
+    viewer.render();
+}
+  </script>
+</body>
+
+</html>

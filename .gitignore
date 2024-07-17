@@ -2,3 +2,18 @@ dist
 build
 node_modules
 **/*.DS_Store
+DATA/
+pcds/
+point_cloud.ply
+point_cloud_1.ply
+point_cloud_2.ply
+garden.ksplat
+gaussian_splat_data/
+gaussian_splat_data.zip
+Untitled-1.ts
+garden.ksplat
+
+
+# index.html
+# index-vr.html
+# .surgeignore
