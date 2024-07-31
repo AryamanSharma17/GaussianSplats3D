@@ -44,9 +44,8 @@
     var gui = new GUI();
     const stats = new Stats();
     document.body.appendChild(stats.dom); 
-    const lightfolder = gui.addFolder('Scene')
-    renderer.xr.enabled = true;
-    renderer.xr.setReferenceSpaceType( 'local' );
+    const dragonfolder = gui.addFolder('Dragon Paths')
+    const legofolder = gui.addFolder('Lego Paths')
     const viewer = new GaussianSplats3D.Viewer({
       'cameraUp': [0, -1, 0 ],
       'initialCameraPosition': [-3.15634, -0.16946, -0.51552],
@@ -59,7 +58,7 @@
 
 
     viewer.addSplatScenes([{
-        'path': './bonsai_trimmed.ksplat',
+        'path': '../Splat files/Dragon/pcd_prune/light_0/pruned_base_point_cloud.ply',
         'rotation': [0,0,0,0],
         'scale': [1.5, 1.5, 1.5],
         'position': [0,0,0]
@@ -69,14 +68,59 @@
     viewer.start();
 });
     
-    let paths = {
-      "Bonsai": "./bonsai_trimmed.ksplat",
-      "Truck": "./truck.ksplat",
-    };
-    const dropdown = lightfolder.add({ path: Object.keys(paths)[0] }, 'path', paths).name('Select Path');
-    
-    dropdown.onChange(function(value) {
-      console.log(value);
+let paths_dragon = {
+      "light 0": "../Splat files/Dragon/pcd_prune/light_0/pruned_base_point_cloud.ply",
+      "light 0 light 1": "../Splat files/Dragon/pcd_prune/light_0_light_1/pruned_l0_point_cloud.ply",
+      "light 0 light 1 light 2": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_2/pruned_l0_point_cloud.ply",
+      "light 0 light 1 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_2_light_3/pruned_base_point_cloud.ply",
+      "light 0 light 1 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_3/pruned_l0_point_cloud.ply",
+      "light 0 light 2": "../Splat files/Dragon/pcd_prune/light_0_light_2/pruned_l0_point_cloud.ply",
+      "light 0 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 0 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_3/pruned_l0_point_cloud.ply",
+      "light 1": "../Splat files/Dragon/pcd_prune/light_1/pruned_l0_point_cloud.ply",
+      "light 1 light 2": "../Splat files/Dragon/pcd_prune/light_1_light_2/pruned_l0_point_cloud.ply",
+      "light 1 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 1 light 3": "../Splat files/Dragon/pcd_prune/light_1_light_3/pruned_l0_point_cloud.ply",
+      "light 2": "../Splat files/Dragon/pcd_prune/light_2/pruned_l0_point_cloud.ply",
+      "light 2 light 3": "../Splat files/Dragon/pcd_prune/light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 3": "../Splat files/Dragon/pcd_prune/light_3/pruned_l0_point_cloud.ply",
+        };
+  let paths_Lego_from_l0={
+    "light 0": "../Splat files/Lego/pcd_prune/light_0/pruned_l0123_point_cloud.ply",
+    "light 0 light 1": "../Splat files/Lego/pcd_prune/light_0_light_1/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 2": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2_light_3/pruned_base_point_cloud.ply",
+    "light 0 light 1 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 2": "../Splat files/Lego/pcd_prune/light_0_light_2/pruned_l0_point_cloud.ply",
+    "light 0 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 3": "../Splat files/Lego/pcd_prune/light_0_light_3/pruned_l0_point_cloud.ply",
+    "light 1": "../Splat files/Lego/pcd_prune/light_1/pruned_l0_point_cloud.ply",
+    "light 1 light 2": "../Splat files/Lego/pcd_prune/light_1_light_2/pruned_l0_point_cloud.ply",
+    "light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 1 light 3": "../Splat files/Lego/pcd_prune/light_1_light_3/pruned_l0_point_cloud.ply",
+    "light 2": "../Splat files/Lego/pcd_prune/light_2/pruned_l0_point_cloud.ply",
+    "light 2 light 3": "../Splat files/Lego/pcd_prune/light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 3": "../Splat files/Lego/pcd_prune/light_3/pruned_l0_point_cloud.ply",
+      };
+  let paths_Lego_from_l0123={
+    "light 0": "../Splat files/Lego/pcd_prune/light_0/pruned_l0123_point_cloud.ply",
+    "light 0 light 1": "../Splat files/Lego/pcd_prune/light_0_light_1/pruned_l0123_point_cloud.ply",
+    "light 0 light 1 light 2": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2/pruned_l0123_point_cloud.ply",
+    "light 0 light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_3/pruned_l0123_point_cloud.ply",
+    "light 0 light 2": "../Splat files/Lego/pcd_prune/light_0_light_2/pruned_l0123_point_cloud.ply",
+    "light 0 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 0 light 3": "../Splat files/Lego/pcd_prune/light_0_light_3/pruned_l0123_point_cloud.ply",
+    "light 1": "../Splat files/Lego/pcd_prune/light_1/pruned_l0123_point_cloud.ply",
+    "light 1 light 2": "../Splat files/Lego/pcd_prune/light_1_light_2/pruned_l0123_point_cloud.ply",
+    "light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_1_light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 1 light 3": "../Splat files/Lego/pcd_prune/light_1_light_3/pruned_l0123_point_cloud.ply",
+    "light 2": "../Splat files/Lego/pcd_prune/light_2/pruned_l0123_point_cloud.ply",
+    "light 2 light 3": "../Splat files/Lego/pcd_prune/light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 3": "../Splat files/Lego/pcd_prune/light_3/pruned_l0123_point_cloud.ply",
+        };
+    const dropdown_dragon = dragonfolder.add({ path: Object.keys(paths_dragon)[0] }, 'path', paths_dragon).name('Select Path');
+    dropdown_dragon.onChange(function(value) {
       const selectedPath = value;
       console.log(selectedPath);
       viewer.addSplatScene(selectedPath, {
@@ -85,40 +129,36 @@
           viewer.removeSplatScene(0);
         });
       });
-      const button = lightfolder.add({ 'Go to VR Page': () => { window.location.href = './index-vr.html'; } }, 'Go to VR Page');
+    const lego_l0 = legofolder.add({ path: Object.keys(paths_Lego_from_l0)[0] }, 'path', paths_Lego_from_l0).name('Select Path (params from l0)');
+    lego_l0.onChange(function(value) {
+      const selectedPath = value;
+      console.log(selectedPath);
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          viewer.removeSplatScene(0);
+        });
+      });
+    const lego_l0123 = legofolder.add({ path: Object.keys(paths_Lego_from_l0123)[0] }, 'path', paths_Lego_from_l0123).name('Select Path (params from l0123)');
+    lego_l0123.onChange(function(value) {
+      const selectedPath = value;
+      console.log(selectedPath);
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          viewer.removeSplatScene(0);
+        });
+      });
+      const button = gui.add({ 'Go to VR Page': () => { window.location.href = './index-vr.html'; } }, 'Go to VR Page');
 
     
-    // const addButton = lightfolder.add({ addScene: false }, 'addScene').name('Add Splat Scene').listen();
-    // addButton.onChange(() => {
-    //   if (addButton.getValue()) {
-    //     viewer.addSplatScene('./truck.ksplat', {
-    //       'progressiveLoad': false
-    //     }).then(() => {
-    //       viewer.start();
-    //       animate();
-    //     });
-    //   }
-    // });
 
-    // const removeButton = lightfolder.add({ removeScene: false }, 'removeScene').name('Remove Splat Scene').listen();
-    // removeButton.onChange(() => {
-    //   if (removeButton.getValue()) {
-    //     viewer.removeSplatScene(0)
-    //       .then(() => {
-    //         viewer.start();
-    //         animate();
-    //       });
-    //   }
-    // });
-    if (renderer.xr.isPresenting) {
-        lightfolder.add(viewer, 'webXRMode', GaussianSplats3D.WebXRMode).name('WebXR Mode');
-        console.log('WebXR is active');  
-    };
 
     function animate() {
         requestAnimationFrame(animate);
         stats.update();
     }
+    animate();
   </script>
 </body>
 

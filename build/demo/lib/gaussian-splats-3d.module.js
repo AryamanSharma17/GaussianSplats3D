@@ -11049,7 +11049,7 @@ class Viewer {
         let loadingUITaskId = null;
         if (showLoadingUI) {
             this.loadingSpinner.removeAllTasks();
-            loadingUITaskId = this.loadingSpinner.addTask('Downloading...');
+            loadingUITaskId = this.loadingSpinner.addTask('Loading...');
         }
         const hideLoadingUI = () => {
             this.loadingProgressBar.hide();
@@ -11060,17 +11060,17 @@ class Viewer {
             if (showLoadingUI) {
                 if (loaderStatus === LoaderStatus.Downloading) {
                     if (percentComplete == 100) {
-                        this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Download complete!');
+                        this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Load complete!');
                     } else {
                         if (progressiveLoad) {
-                            this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Downloading splats...');
+                            this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Loading new lights...');
                         } else {
                             const suffix = percentCompleteLabel ? `: ${percentCompleteLabel}` : `...`;
-                            this.loadingSpinner.setMessageForTask(loadingUITaskId, `Downloading${suffix}`);
+                            this.loadingSpinner.setMessageForTask(loadingUITaskId, `Loading${suffix}`);
                         }
                     }
                 } else if (loaderStatus === LoaderStatus.Processing) {
-                    this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Processing splats...');
+                    this.loadingSpinner.setMessageForTask(loadingUITaskId, 'Processing illuminants...');
                 }
             }
         };
@@ -11277,7 +11277,7 @@ class Viewer {
         let loadingUITaskId;
         if (showLoadingUI) {
             this.loadingSpinner.removeAllTasks();
-            loadingUITaskId = this.loadingSpinner.addTask('Downloading...');
+            loadingUITaskId = this.loadingSpinner.addTask('Loading ...');
         }
 
         const onLoadProgress = (fileIndex, percent, percentLabel, loaderStatus) => {
@@ -11289,7 +11289,7 @@ class Viewer {
             if (showLoadingUI) {
                 if (loaderStatus === LoaderStatus.Downloading) {
                     this.loadingSpinner.setMessageForTask(loadingUITaskId, totalPercent == 100 ?
-                                                          `Download complete!` : `Downloading: ${percentLabel}`);
+                                                          `Load complete!` : `Loading: ${percentLabel}`);
                 }
             }
             if (onProgress) onProgress(totalPercent, percentLabel, loaderStatus);
@@ -11424,7 +11424,7 @@ class Viewer {
 
             return new Promise((resolve) => {
                 if (showLoadingUI) {
-                    splatProcessingTaskId = this.loadingSpinner.addTask('Processing splats...');
+                    splatProcessingTaskId = this.loadingSpinner.addTask('Processing illuminants...');
                 }
                 delayedExecute(() => {
                     if (this.isDisposingOrDisposed()) {

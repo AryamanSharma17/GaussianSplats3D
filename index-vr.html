@@ -48,7 +48,8 @@
     var gui = new GUI();
     const stats = new Stats();
     document.body.appendChild(stats.dom); 
-    const lightfolder = gui.addFolder('Scene')
+    const dragonfolder = gui.addFolder('Dragon Paths')
+    const legofolder = gui.addFolder('Lego Paths')
     renderer.xr.enabled = true;
     renderer.xr.setReferenceSpaceType( 'local' );
     // document.body.appendChild( VRButton.createButton( renderer ) );
@@ -89,7 +90,7 @@
 
 
     viewer.addSplatScenes([{
-        'path': './bonsai_trimmed.ksplat',
+        'path': '../Splat files/Dragon/pcd_prune/light_0/pruned_base_point_cloud.ply',
         'rotation': [0,0,0,0],
         'scale': [1.5, 1.5, 1.5],
         'position': [0,0,0]
@@ -98,25 +99,90 @@
 .then(() => {
   requestAnimationFrame(update);
 });
-    
-    let paths = {
-      "Bonsai": "./bonsai_trimmed.ksplat",
-      "Truck": "./truck.ksplat",
-    };
-    const dropdown = lightfolder.add({ path: Object.keys(paths)[0] }, 'path', paths).name('Select Path');
-    
-    dropdown.onChange(function(value) {
+     
+
+let paths_dragon = {
+      "light 0": "../Splat files/Dragon/pcd_prune/light_0/pruned_base_point_cloud.ply",
+      "light 0 light 1": "../Splat files/Dragon/pcd_prune/light_0_light_1/pruned_l0_point_cloud.ply",
+      "light 0 light 1 light 2": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_2/pruned_l0_point_cloud.ply",
+      "light 0 light 1 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_2_light_3/pruned_base_point_cloud.ply",
+      "light 0 light 1 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_1_light_3/pruned_l0_point_cloud.ply",
+      "light 0 light 2": "../Splat files/Dragon/pcd_prune/light_0_light_2/pruned_l0_point_cloud.ply",
+      "light 0 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 0 light 3": "../Splat files/Dragon/pcd_prune/light_0_light_3/pruned_l0_point_cloud.ply",
+      "light 1": "../Splat files/Dragon/pcd_prune/light_1/pruned_l0_point_cloud.ply",
+      "light 1 light 2": "../Splat files/Dragon/pcd_prune/light_1_light_2/pruned_l0_point_cloud.ply",
+      "light 1 light 2 light 3": "../Splat files/Dragon/pcd_prune/light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 1 light 3": "../Splat files/Dragon/pcd_prune/light_1_light_3/pruned_l0_point_cloud.ply",
+      "light 2": "../Splat files/Dragon/pcd_prune/light_2/pruned_l0_point_cloud.ply",
+      "light 2 light 3": "../Splat files/Dragon/pcd_prune/light_2_light_3/pruned_l0_point_cloud.ply",
+      "light 3": "../Splat files/Dragon/pcd_prune/light_3/pruned_l0_point_cloud.ply",
+        };
+  let paths_Lego_from_l0={
+    "light 0": "../Splat files/Lego/pcd_prune/light_0/pruned_l0123_point_cloud.ply",
+    "light 0 light 1": "../Splat files/Lego/pcd_prune/light_0_light_1/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 2": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2_light_3/pruned_base_point_cloud.ply",
+    "light 0 light 1 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 2": "../Splat files/Lego/pcd_prune/light_0_light_2/pruned_l0_point_cloud.ply",
+    "light 0 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 3": "../Splat files/Lego/pcd_prune/light_0_light_3/pruned_l0_point_cloud.ply",
+    "light 1": "../Splat files/Lego/pcd_prune/light_1/pruned_l0_point_cloud.ply",
+    "light 1 light 2": "../Splat files/Lego/pcd_prune/light_1_light_2/pruned_l0_point_cloud.ply",
+    "light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 1 light 3": "../Splat files/Lego/pcd_prune/light_1_light_3/pruned_l0_point_cloud.ply",
+    "light 2": "../Splat files/Lego/pcd_prune/light_2/pruned_l0_point_cloud.ply",
+    "light 2 light 3": "../Splat files/Lego/pcd_prune/light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 3": "../Splat files/Lego/pcd_prune/light_3/pruned_l0_point_cloud.ply",
+      };
+  let paths_Lego_from_l0123={
+    "light 0": "../Splat files/Lego/pcd_prune/light_0/pruned_l0123_point_cloud.ply",
+    "light 0 light 1": "../Splat files/Lego/pcd_prune/light_0_light_1/pruned_l0123_point_cloud.ply",
+    "light 0 light 1 light 2": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2/pruned_l0123_point_cloud.ply",
+    "light 0 light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_2_light_3/pruned_l0_point_cloud.ply",
+    "light 0 light 1 light 3": "../Splat files/Lego/pcd_prune/light_0_light_1_light_3/pruned_l0123_point_cloud.ply",
+    "light 0 light 2": "../Splat files/Lego/pcd_prune/light_0_light_2/pruned_l0123_point_cloud.ply",
+    "light 0 light 2 light 3": "../Splat files/Lego/pcd_prune/light_0_light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 0 light 3": "../Splat files/Lego/pcd_prune/light_0_light_3/pruned_l0123_point_cloud.ply",
+    "light 1": "../Splat files/Lego/pcd_prune/light_1/pruned_l0123_point_cloud.ply",
+    "light 1 light 2": "../Splat files/Lego/pcd_prune/light_1_light_2/pruned_l0123_point_cloud.ply",
+    "light 1 light 2 light 3": "../Splat files/Lego/pcd_prune/light_1_light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 1 light 3": "../Splat files/Lego/pcd_prune/light_1_light_3/pruned_l0123_point_cloud.ply",
+    "light 2": "../Splat files/Lego/pcd_prune/light_2/pruned_l0123_point_cloud.ply",
+    "light 2 light 3": "../Splat files/Lego/pcd_prune/light_2_light_3/pruned_l0123_point_cloud.ply",
+    "light 3": "../Splat files/Lego/pcd_prune/light_3/pruned_l0123_point_cloud.ply",
+        };
+    const dropdown_dragon = dragonfolder.add({ path: Object.keys(paths_dragon)[0] }, 'path', paths_dragon).name('Select Path');
+    dropdown_dragon.onChange(function(value) {
       const selectedPath = value;
+      console.log(selectedPath);
       viewer.addSplatScene(selectedPath, {
         'progressiveLoad': false
         }).then(() => {
-          console.log('removing other scene');
           viewer.removeSplatScene(0);
         });
       });
-      // const button = lightfolder.add({ 'test Page': () => { window.location.href = './index-vr-test.html'; } }, 'test Page'); 
-      const button_stat = lightfolder.add({ 'Static Page': () => { window.location.href = './index.html'; } }, 'Static Page');
-      // const button_test = lightfolder.add({ 'Go to VRtest Page': () => { window.location.href = './index-vr-test.html'; } }, 'Go to VR test Page');
+    const lego_l0 = legofolder.add({ path: Object.keys(paths_Lego_from_l0)[0] }, 'path', paths_Lego_from_l0).name('Select Path (params from l0)');
+    lego_l0.onChange(function(value) {
+      const selectedPath = value;
+      console.log(selectedPath);
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          viewer.removeSplatScene(0);
+        });
+      });
+    const lego_l0123 = legofolder.add({ path: Object.keys(paths_Lego_from_l0123)[0] }, 'path', paths_Lego_from_l0123).name('Select Path (params from l0123)');
+    lego_l0123.onChange(function(value) {
+      const selectedPath = value;
+      console.log(selectedPath);
+      viewer.addSplatScene(selectedPath, {
+        'progressiveLoad': false
+        }).then(() => {
+          viewer.removeSplatScene(0);
+        });
+      });
+      const button_stat = gui.add({ 'Go to Static Page': () => { window.location.href = './index.html'; } }, 'Go to Static Page');
 
     console.log(renderer.xr.getSession());
 
@@ -129,6 +195,7 @@
     renderer.render( scene, camera );
 
     } );
+    animate();
     function update() {
     requestAnimationFrame(update);
     viewer.update();
